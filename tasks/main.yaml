@@ -1,0 +1,33 @@
+## SealedSecret
+- name: "Verify that required string variables are defined"
+  assert:
+    that: 
+      - required_variable is defined
+      - required_variable | length > 0
+      - required_variable != None
+    fail_msg: "{{ required_variable }} needs to be set for the role to work"
+    success_msg: "Required variable {{ required_variable}} is defined"
+  loop_control:
+    loop_var: required_variable
+  with_items:
+    - "{{ FLUX_GIT_URL }}"
+    - "{{ FLUX_GIT_BRANCH }}"
+    - "{{ FLUX_GIT_PATH }}"
+    - "{{ FLUX_GIT_EMAIL }}"
+    - "{{ FLUX_GIT_IMAGE_VERSION }}"
+    - "{{ FLUX_SSH_DEPLOY_PUBLIC_KEY }}"
+    - "{{ FLUX_SSH_DEPLOY_PRIVATE_KEY }}"
+  no_log: True
+
+
+- name: Setup Flux namespace
+  shell: echo "{{ lookup('template', 'flux-namespace.yaml') }}" | kubectl apply -f -
+
+- name: Setup flux secrets 
+  shell: echo "{{ lookup('template', 'flux-secret.yaml') }}" | kubectl apply -f -
+
+- name: Setup Flux service account
+  shell: echo "{{ lookup('template', 'flux-service-account.yaml') }}" | kubectl apply -f -
+  
+- name: Setup Flux deployment
+  shell: echo "{{ lookup('template', 'flux-deployment.yaml') }}" | kubectl apply -f -
