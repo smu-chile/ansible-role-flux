@@ -31,3 +31,14 @@
   
 - name: Setup Flux deployment
   shell: echo "{{ lookup('template', 'flux-deployment.yaml') }}" | kubectl apply -f -
+
+- name: Setup Helm Operator
+  shell: kubectl apply -f https://raw.githubusercontent.com/fluxcd/helm-operator/1.4.0/deploy/crds.yaml
+
+- name: Add fluxcd repo helm 
+  shell: helm repo add fluxcd https://charts.fluxcd.io
+
+- name: Add fluxcd repo helm 
+  shell: helm upgrade -i helm-operator fluxcd/helm-operator --namespace flux --set helm.versions=v3 
+
+    
