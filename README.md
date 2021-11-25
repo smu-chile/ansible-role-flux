@@ -36,10 +36,6 @@ Example Playbook
       FLUX_SSH_DEPLOY_PRIVATE_KEY: "{{ lookup('env', 'SSH_DEPLOY_PRIVATE_KEY') }}"
 ```
 
-License
--------
-
-BSD
 
 Author Information
 ------------------
